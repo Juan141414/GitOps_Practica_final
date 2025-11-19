@@ -33,7 +33,7 @@ jobs:
 
     - name: Terraform init
       run: terraform init
-      working-directory: ./terraform
+      working-directory: ./Terraform
 
     - name: Terraform apply
       id: tf_apply
@@ -42,19 +42,19 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
       run: terraform apply -auto-approve
-      working-directory: ./terraform
+      working-directory: ./Terraform
 
     - name: Capture Terraform outputs
       id: tf_outputs
       run: |
-        terraform output -json > terraform/terraform_outputs.json
-      working-directory: ./terraform
+        terraform output -json > Terraform/terraform_outputs.json
+      working-directory: ./Terraform
 
     - name: Read Terraform outputs into variables
       id: read_outputs
       run: |
-        echo "RDS_ENDPOINT=$(jq -r '.rds_endpoint.value' terraform/terraform_outputs.json)" >> $GITHUB_ENV
-        echo "EC2_KEY=$(cat terraform/Juan-key.pem)" >> $GITHUB_ENV
+        echo "RDS_ENDPOINT=$(jq -r '.rds_endpoint.value' Terraform/terraform_outputs.json)" >> $GITHUB_ENV
+        echo "EC2_KEY=$(cat Terraform/Juan-key.pem)" >> $GITHUB_ENV
 
     - name: Upload EC2 private key as GitHub Secret
       run: |
@@ -84,7 +84,7 @@ jobs:
   
     - name: Terraform init
       run: terraform init
-      working-directory: ./terraform
+      working-directory: ./Terraform
   
     - name: Terraform destroy
       env:
@@ -92,4 +92,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
       run: terraform destroy -auto-approve
-      working-directory: ./terraform
+      working-directory: ./Terraform
