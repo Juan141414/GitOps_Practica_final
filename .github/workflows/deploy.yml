@@ -60,7 +60,7 @@ jobs:
     - name: Read Terraform outputs into variables
       id: read_outputs
       run: |
-        echo "RDS_ENDPOINT=$(jq -r '.rds_endpoint.value' ansible/terraform_outputs.json)" >> $GITHUB_ENV
+        echo "RDS_ENDPOINT=$(jq -r '.rds_endpoint.value' ./ansible/terraform_outputs.json)" >> $GITHUB_ENV
         echo "EC2_KEY=$(cat Terraform/Juan-key.pem)" >> $GITHUB_ENV
 
     - name: Upload EC2 private key as GitHub Secret
