@@ -63,9 +63,6 @@ jobs:
         chmod 600 /home/runner/.ssh/Juan-key.pem
       working-directory: ./Terraform
 
-    - name: Check terraform_outputs.json
-      run: cat ./ansible/terraform_outputs.json
-  
     - name: Run Ansible playbook
       run: |
         ansible-playbook site.yml
