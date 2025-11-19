@@ -1,0 +1,19 @@
+# Terraform
+**/.terraform/
+**/.terraform.lock.hcl
+**/terraform.tfstate
+**/terraform.tfstate.backup
+
+# Providers
+**/terraform-provider-*
+
+# SSH keys
+*.pem
+
+# Ansible cache
+**/.ansible/
+
+# OS / editor files
+*.swp
+*.swo
+.DS_Store

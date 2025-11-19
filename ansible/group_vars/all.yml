@@ -1,0 +1,8 @@
+terraform_outputs: "{{ lookup('file', 'terraform_outputs.json') | from_json }}"
+
+db_host: "{{ terraform_outputs.rds_endpoint.value }}"
+db_name: "wordpress"
+db_user: "wp_user"
+  
+# Guardar contraseña en Ansible Vault después
+db_password: "{{ vault_db_password | default('CHANGEME') }}"
