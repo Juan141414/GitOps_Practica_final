@@ -1,4 +1,4 @@
-terraform_outputs: "{{ lookup('file', 'terraform_outputs.json') | from_json }}"
+terraform_outputs: "{{ lookup('file', '/home/runner/work/GitOps_Practica_final/GitOps_Practica_final/ansible/terraform_outputs.json') | from_json }}"
 
 db_host: "{{ terraform_outputs.rds_endpoint.value }}"
 db_name: "wordpress"
