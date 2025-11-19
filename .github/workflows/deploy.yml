@@ -54,29 +54,16 @@ jobs:
     - name: Capture Terraform outputs
       id: tf_outputs
       run: |
-        terraform output -json > ../ansible/terraform_outputs.json
+        terraform output -json > terraform_outputs.json
+        mv terraform_outputs.json ../ansible/
+        cp Juan-key.pem ~/.ssh/Juan-key.pem
+        chmod 600 ~/.ssh/Juan-key.pem
       working-directory: ./Terraform
 
-    - name: Read Terraform outputs into variables
-      id: read_outputs
-      run: |
-        echo "RDS_ENDPOINT=$(jq -r '.rds_endpoint.value' ./ansible/terraform_outputs.json)" >> $GITHUB_ENV
-        echo "EC2_KEY=$(cat Terraform/Juan-key.pem)" >> $GITHUB_ENV
-
-    - name: Upload EC2 private key as GitHub Secret
-      run: |
-        gh secret set EC2_SSH_PRIVATE_KEY --body "$EC2_KEY" --repo ${{ github.repository }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Run Ansible playbook
-      env:
-        EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        TF_DB_HOST: ${{ env.RDS_ENDPOINT }}
       run: |
-        echo "$EC2_SSH_PRIVATE_KEY" > ./ansible/temp-key.pem
-        chmod 400 ./ansible/temp-key.pem
-        ansible-playbook -i ansible/aws.ec2.yml ansible/site.yml --private-key ./ansible/temp-key.pem
+        cd ../ansible/
+        ansible-playbook site.yml
 
   destroy:
     runs-on: ubuntu-latest
