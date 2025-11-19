@@ -2,7 +2,7 @@
   "alb_dns_name": {
     "sensitive": false,
     "type": "string",
-    "value": "JuanWordpress-alb-1219826388.us-west-1.elb.amazonaws.com"
+    "value": "JuanWordpress-alb-1949135692.us-west-1.elb.amazonaws.com"
   },
   "asg_name": {
     "sensitive": false,
@@ -19,8 +19,8 @@
       ]
     ],
     "value": [
-      "nat-0dc63a320b67407db",
-      "nat-0ce058d1dd3f82d16"
+      "nat-0db1bfda686705f86",
+      "nat-03c2bff99920f7370"
     ]
   },
   "private_subnets": {
@@ -33,8 +33,8 @@
       ]
     ],
     "value": [
-      "subnet-0e6054939c78ef2fe",
-      "subnet-0ba2ff41ca8970bc1"
+      "subnet-0729a7711eb54474a",
+      "subnet-0db50864ee88c75d7"
     ]
   },
   "public_subnets": {
@@ -47,8 +47,8 @@
       ]
     ],
     "value": [
-      "subnet-06fa4a33a1685f64f",
-      "subnet-0ac2e7ff2085ac058"
+      "subnet-031d9ae7eac34e102",
+      "subnet-0bc1b3680c27f6f32"
     ]
   },
   "rds_endpoint": {
@@ -59,6 +59,6 @@
   "vpc_id": {
     "sensitive": false,
     "type": "string",
-    "value": "vpc-089812c1e32930248"
+    "value": "vpc-0b564e9fe0c86b504"
   }
 }
