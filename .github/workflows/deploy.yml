@@ -1,0 +1,95 @@
+name: Terraform + Ansible deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+        action:
+          description: 'Selecciona apply o destroy'
+          required: true
+          default: 'apply'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.action == 'apply' }}
+    
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        pip install ansible boto3 botocore
+
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.6.0
+
+    - name: Terraform init
+      run: terraform init
+      working-directory: ./terraform
+
+    - name: Terraform apply
+      id: tf_apply
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+      run: terraform apply -auto-approve
+      working-directory: ./terraform
+
+    - name: Capture Terraform outputs
+      id: tf_outputs
+      run: |
+        terraform output -json > terraform/terraform_outputs.json
+      working-directory: ./terraform
+
+    - name: Read Terraform outputs into variables
+      id: read_outputs
+      run: |
+        echo "RDS_ENDPOINT=$(jq -r '.rds_endpoint.value' terraform/terraform_outputs.json)" >> $GITHUB_ENV
+        echo "EC2_KEY=$(cat terraform/Juan-key.pem)" >> $GITHUB_ENV
+
+    - name: Upload EC2 private key as GitHub Secret
+      run: |
+        gh secret set EC2_SSH_PRIVATE_KEY --body "$EC2_KEY" --repo ${{ github.repository }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Run Ansible playbook
+      env:
+        EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        TF_DB_HOST: ${{ env.RDS_ENDPOINT }}
+      run: |
+        echo "$EC2_SSH_PRIVATE_KEY" > ./ansible/temp-key.pem
+        chmod 400 ./ansible/temp-key.pem
+        ansible-playbook -i ansible/aws.ec2.yml ansible/site.yml --private-key ./ansible/temp-key.pem
+
+  destroy:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'destroy'
+  
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+  
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+  
+    - name: Terraform init
+      run: terraform init
+      working-directory: ./terraform
+  
+    - name: Terraform destroy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+      run: terraform destroy -auto-approve
+      working-directory: ./terraform
