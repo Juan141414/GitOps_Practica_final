@@ -57,8 +57,10 @@ jobs:
       run: |
         terraform output -json > terraform_outputs.json
         mv terraform_outputs.json ../ansible/
-        cp Juan-key.pem ~/.ssh/Juan-key.pem
-        chmod 600 ~/.ssh/Juan-key.pem
+        mkdir -p /home/runner/.ssh
+        chmod 700 /home/runner/.ssh
+        cp Juan-key.pem /home/runner/.ssh/Juan-key.pem
+        chmod 600 /home/runner/.ssh/Juan-key.pem
       working-directory: ./Terraform
 
     - name: Run Ansible playbook
