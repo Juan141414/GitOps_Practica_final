@@ -65,8 +65,8 @@ jobs:
 
     - name: Run Ansible playbook
       run: |
-        cd ../ansible/
         ansible-playbook site.yml
+      working-directory: ./ansible
 
   destroy:
     runs-on: ubuntu-latest
