@@ -1,4 +1,6 @@
-db_host: "{{ lookup('env','TF_DB_HOST') }}"
+terraform_outputs: "{{ lookup('file', 'terraform_outputs.json') | from_json }}"
+
+db_host: "{{ terraform_outputs.rds_endpoint.value }}"
 db_name: "wordpress"
 db_user: "wp_user"
   
