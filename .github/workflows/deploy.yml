@@ -24,7 +24,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install ansible boto3 botocore
+        pip install ansible ansible-lint boto3 botocore
 
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v2
@@ -74,6 +74,10 @@ jobs:
         cp Juan-key.pem /home/runner/.ssh/Juan-key.pem
         chmod 600 /home/runner/.ssh/Juan-key.pem
       working-directory: ./Terraform
+
+    - name: Run ansible-lint
+      run: ansible-lint
+      working-directory: ./ansible      
 
     - name: Validate ssh conectivity
       run: |
