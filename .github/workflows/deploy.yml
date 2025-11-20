@@ -25,7 +25,9 @@ jobs:
     - name: Install dependencies
       run: |
         pip install ansible boto3 botocore
-
+#-------------------------
+# Configurar y verificar Terraform
+#-------------------------
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v2
       with:
@@ -48,7 +50,11 @@ jobs:
 
     - name: Terraform validate
       run: terraform validate
-      working-directory: ./Terraform      
+      working-directory: ./Terraform
+
+#-------------------------
+# Crear la infraestructura con Terraform
+#-------------------------      
 
     - name: Terraform plan
       run: terraform plan
@@ -64,11 +70,15 @@ jobs:
       run: terraform apply -auto-approve
       working-directory: ./Terraform
 
+#-------------------------
+# Configurar y verificar Ansible
+#-------------------------
+
     - name: Capture Terraform outputs
       id: tf_outputs
       run: |
-        terraform output -json > terraform_outputs.json
-        mv terraform_outputs.json ../ansible/
+        #terraform output -json > terraform_outputs.json
+        #mv terraform_outputs.json ../ansible/
         mkdir -p /home/runner/.ssh
         chmod 700 /home/runner/.ssh
         cp Juan-key.pem /home/runner/.ssh/Juan-key.pem
@@ -84,6 +94,10 @@ jobs:
     - name: Validate Ansible syntax
       run: ansible-playbook site.yml --syntax-check
       working-directory: ./ansible    
+
+#-------------------------
+# Ejecutar Ansible
+#-------------------------
 
     - name: Run Ansible playbook
       run: |
