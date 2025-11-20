@@ -43,4 +43,20 @@
   when: pkg_mgr_family != 'debian'
   notify: Restart webserver
 
+- name: Ensure document root exists
+  file:
+    path: /var/www/myapp
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Deploy custom index.html
+  copy:
+    src: index.html
+    dest: /var/www/myapp/index.html
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
 
