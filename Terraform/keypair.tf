@@ -12,7 +12,8 @@ resource "aws_key_pair" "wordpress_keypair" {
 
 # Guardar la clave privada localmente como archivo .pem
 resource "local_file" "private_key" {
-  content              = tls_private_key.wordpress_key.private_key_pem
-  filename             = "${path.module}/Juan-key.pem"
-  file_permission      = "0400"
+  content         = tls_private_key.wordpress_key.private_key_pem
+  filename        = "${path.module}/Juan-key.pem"
+  file_permission = "0400"
+
 }
