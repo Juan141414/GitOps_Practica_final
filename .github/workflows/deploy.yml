@@ -35,10 +35,6 @@ jobs:
       run: terraform fmt -check -recursive
       working-directory: ./Terraform
 
-    - name: Validate Ansible syntax
-      run: ansible-playbook site.yml --syntax-check
-      working-directory: ./ansible
-
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -83,7 +79,11 @@ jobs:
       run: |
         ansible-inventory --graph
         ansible all -m ping
-      working-directory: ./ansible      
+      working-directory: ./ansible
+
+    - name: Validate Ansible syntax
+      run: ansible-playbook site.yml --syntax-check
+      working-directory: ./ansible    
 
     - name: Run Ansible playbook
       run: |
