@@ -15,6 +15,9 @@ resource "aws_launch_template" "web_lt" {
               # minimal packages so Ansible can connect (python3 must be present)
               apt-get update -y
               apt-get install -y python3 python3-apt openssh-server curl
+              apt install apache2 -y
+              systemctl enable apache2
+              systemctl start apache2
               EOF
   )
 
@@ -26,3 +29,4 @@ resource "aws_launch_template" "web_lt" {
     }
   }
 }
+
