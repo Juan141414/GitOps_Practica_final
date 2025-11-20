@@ -45,7 +45,7 @@
 
 - name: Ensure document root exists
   file:
-    path: /var/www/myapp
+    path: /var/www/html
     state: directory
     owner: www-data
     group: www-data
@@ -54,7 +54,7 @@
 - name: Deploy custom index.html
   copy:
     src: index.html
-    dest: /var/www/myapp/index.html
+    dest: /var/www/html/index.html
     owner: www-data
     group: www-data
     mode: '0644'
