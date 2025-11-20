@@ -31,6 +31,18 @@ jobs:
       with:
         terraform_version: 1.6.0
 
+    - name: Terraform fmt check
+      run: terraform fmt -check -recursive
+      working-directory: ./Terraform
+
+    - name: Terraform validate
+      run: terraform validate
+      working-directory: ./Terraform
+
+    - name: Validate Ansible syntax
+      run: ansible-playbook site.yml --syntax-check
+      working-directory: ./ansible
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -41,6 +53,10 @@ jobs:
     - name: Terraform init
       run: terraform init
       working-directory: ./Terraform
+
+    - name: Terraform plan
+      run: terraform plan
+      working-directory: ./Terraform      
 
     - name: Terraform apply
       id: tf_apply
@@ -63,6 +79,12 @@ jobs:
         chmod 600 /home/runner/.ssh/Juan-key.pem
       working-directory: ./Terraform
 
+    - name: Validate ssh conectivity
+      run: |
+        ansible-inventory --graph
+        ansible all -m ping
+      working-directory: ./ansible      
+
     - name: Run Ansible playbook
       run: |
         ansible-playbook site.yml
@@ -75,6 +97,12 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
+
+    - name: Safety check before destroy
+      run: |
+        echo "ADVERTENCIA: Se ejecutará terraform destroy."
+        echo "Si esto no es correcto, cancela el workflow."
+        sleep 10      
   
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
