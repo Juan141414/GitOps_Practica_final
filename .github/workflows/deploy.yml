@@ -77,8 +77,6 @@ jobs:
     - name: Capture Terraform outputs
       id: tf_outputs
       run: |
-        #terraform output -json > terraform_outputs.json
-        #mv terraform_outputs.json ../ansible/
         mkdir -p /home/runner/.ssh
         chmod 700 /home/runner/.ssh
         cp Juan-key.pem /home/runner/.ssh/Juan-key.pem
