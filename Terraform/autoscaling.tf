@@ -16,7 +16,7 @@ resource "aws_autoscaling_group" "web_asg" {
 
   tag {
     key                 = "Name"
-    value               = "JuanWordpress-asg-instance"
+    value               = "JuanWordpress-asg"
     propagate_at_launch = true
   }
 
@@ -30,3 +30,4 @@ resource "aws_autoscaling_group" "web_asg" {
     create_before_destroy = true
   }
 }
+
